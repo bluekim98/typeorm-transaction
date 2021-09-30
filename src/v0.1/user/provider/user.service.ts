@@ -16,14 +16,18 @@ export class UserService {
         @Inject('USER_SERVICE') private readonly userClient: ClientProxy,
     ) {}
 
+    private async send(command: UserCommand, payload: any) {
+        return await firstValueFrom(
+            this.userClient.send(userPatternOf(command), payload),
+        );
+    }
+
     async findUser(id: number): Promise<ServiceStatusDto<User>> {
         const payload = {
             where: { id },
         };
 
-        return await firstValueFrom(
-            this.userClient.send(userPatternOf(UserCommand.FIND), payload),
-        );
+        return await this.send(UserCommand.FIND, payload);
     }
 
     async createUser(
@@ -33,10 +37,7 @@ export class UserService {
         const payload = {
             dto,
         };
-
-        return await firstValueFrom(
-            this.userClient.send(userPatternOf(UserCommand.CREATE), payload),
-        );
+        return await this.send(UserCommand.CREATE, payload);
     }
 
     private toMicroserviceCreateUserDto(
@@ -52,8 +53,6 @@ export class UserService {
             id,
         };
 
-        return await firstValueFrom(
-            this.userClient.send(userPatternOf(UserCommand.REMOVE), payload),
-        );
+        return await this.send(UserCommand.REMOVE, payload);
     }
 }

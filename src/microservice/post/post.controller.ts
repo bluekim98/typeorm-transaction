@@ -1,4 +1,9 @@
-import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+    Controller,
+    ParseIntPipe,
+    UsePipes,
+    ValidationPipe,
+} from '@nestjs/common';
 import { Payload } from '@nestjs/microservices';
 import { PaginationDto } from '@src/common/dto';
 import { PostWhere } from './dto';

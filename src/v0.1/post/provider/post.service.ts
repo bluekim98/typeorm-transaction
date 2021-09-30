@@ -14,12 +14,14 @@ export class PostService {
         @Inject('POST_SERVICE') private readonly postClient: ClientProxy,
     ) {}
 
-    async getMany(findDto: V01FindPostDto, page?: PaginationDto) {
+    private async send(command: PostCommand, payload: any) {
         return await firstValueFrom(
-            this.postClient.send(postPatternOf(PostCommand.FIND_ALL), {
-                where: findDto,
-                page,
-            }),
+            this.postClient.send(postPatternOf(command), payload),
         );
+    }
+
+    async getMany(findDto: V01FindPostDto, page?: PaginationDto) {
+        const payload = { where: findDto, page };
+        return await this.send(PostCommand.FIND_ALL, payload);
     }
 }
